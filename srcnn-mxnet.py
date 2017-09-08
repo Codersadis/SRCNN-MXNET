@@ -8,13 +8,13 @@ Network Architecture for SRCNN
 '''
 def SRCNN_Architecture(img_lr, filter_num1, kernel_size1, filter_num2, kernel_size2, filter_num3, kernel_size3):
     net = mx.sym.Convolution(data=img_lr, kernel=(kernel_size1, kernel_size1), stride=(1, 1),
-                             pad=(4, 4), num_filter=filter_num1, name='conv1')
+                             pad=(0, 0), num_filter=filter_num1, name='conv1')
     net = mx.sym.Activation(data=net, act_type='relu', name='relu1')
     net = mx.sym.Convolution(data=net, kernel=(kernel_size2, kernel_size2), stride=(1, 1),
                              pad=(0, 0), num_filter=filter_num2, name='conv2')
     net = mx.sym.Activation(data=net, act_type='relu', name='relu2')
     net = mx.sym.Convolution(data=net, kernel=(kernel_size3, kernel_size3), stride=(1, 1),
-                             pad=(2, 2), num_filter=filter_num3, name='conv3')
+                             pad=(0, 0), num_filter=filter_num3, name='conv3')
     return net
 
 ''''
@@ -23,10 +23,10 @@ Params for training samples
 logging.getLogger().setLevel(logging.DEBUG)
 batch_size = 16
 image_size = 33
-label_size = 33
+label_size = 21
 stride     = 15
 magnitude  = 2
-EpochNum   = 30
+EpochNum   = 3
 
 ''''
 Generate the h5 files
@@ -72,7 +72,7 @@ srcnn_model = mx.mod.Module(symbol=srcnn,
 srcnn_model.fit(train_iter,
                 num_epoch=EpochNum,
                 eval_data=val_iter,
-                optimizer='adadelta',
+                optimizer='adam',
                 initializer=mx.init.Xavier(rnd_type='gaussian', factor_type='in',magnitude=2),
                 optimizer_params={'learning_rate':0.0001},
                 eval_metric='mse',

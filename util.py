@@ -33,8 +33,8 @@ def preprocess(path, magnitude=2):
     image  = imread(path, is_grayscale=True)
     label_ = modcrop(image, magnitude)
 
-    image  = image / 255
-    label_ = label_ / 255
+    image  = (image - 128) / 128
+    label_ = (label_ - 128) / 128
 
     input_ = scipy.ndimage.interpolation.zoom(label_, (1./magnitude), prefilter=False)
     input_ = scipy.ndimage.interpolation.zoom(input_, magnitude, prefilter=False)
